@@ -82,7 +82,7 @@ EErrorCode Transport::setupClient(SentryDSN dsn)
         if (m_dsnStruct.secretKey != "")
             ss << ", " << "sentry_secret key: " << m_dsnStruct.secretKey;
         ss << std::endl << "Endpoint path: " << m_dsnStruct.sentry_endpoint_path;
-        LOG(ss.str());
+        LOG_SENTRY_DEBUG(ss.str());
 #endif // DEBUG_SENTRYCPP
 
     m_pHttpClient = std::make_shared<http::Client>(m_dsnStruct.hostPath);
@@ -200,7 +200,9 @@ bool Transport::droppingEventsTimeoutReached()
 {
     auto timeSinceLastRequest = std::chrono::system_clock::now() - m_lastRequestBeforeDroppingTime;
 
-    return (std::chrono::duration_cast<std::chrono::milliseconds>(timeSinceLastRequest).count() >= m_retryAfterMilliseconds);
+    auto millisecondsSinceLasteRequest = std::chrono::duration_cast<std::chrono::milliseconds>(timeSinceLastRequest).count();
+
+    return ( static_cast<uint64_t>(millisecondsSinceLasteRequest) >= m_retryAfterMilliseconds);
 }
 
 void Transport::changeState(State newState)
@@ -240,7 +242,7 @@ void Transport::sendPost(const std::string& content)
     }
     ss << "Request contents: " << content << std::endl;
     ss << "Http client url: " << m_dsnStruct.sentry_endpoint << std::endl;
-    LOG(ss.str());
+    LOG_SENTRY_DEBUG(ss.str());
 #endif // DEBUG_SENTRYCPP
 
     sendPost(content, header);
@@ -262,9 +264,11 @@ void Transport::sendPost(const std::string& content, const http::Header& header,
     }
     catch(SimpleWeb::system_error& e)
     {
-        LOG("Could not send event! ");
-        LOG(e.code().message());
-        LOG(e.what());
+#ifdef DEBUG_SENTRYCPP
+        LOG_SENTRY_DEBUG("Could not send event! ");
+        LOG_SENTRY_DEBUG(e.code().message());
+        LOG_SENTRY_DEBUG(e.what());
+#endif
         changeState(State::NO_CONNECTION); // ? does every error mean that?
         m_lastConnectionRequestTime = std::chrono::system_clock::now();
     }
@@ -328,7 +332,7 @@ bool Transport::checkResponse(std::shared_ptr<http::Response> response)
                 ss << h.first << ": " << h.second << std::endl;
             }
             ss << "Response content: " << response->content.string() << std::endl;
-            LOG(ss.str());
+            LOG_SENTRY_DEBUG(ss.str());
 #endif //DEBUG_SENTRYCPP
         return false;
     }

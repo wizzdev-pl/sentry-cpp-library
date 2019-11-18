@@ -135,7 +135,7 @@ void Hub::terminationHandler()
     assert(m_hub_that_installed_termination_handler->m_pHttpClient != nullptr);
 
 #ifdef DEBUG_SENTRYCPP
-    LOG("TerminationHandler called!");
+    LOG_SENTRY_DEBUG("TerminationHandler called!");
 #endif // DEBUG_SENTRYCPP
 
     assert(m_hub_that_installed_termination_handler != nullptr);
@@ -167,7 +167,7 @@ void Hub::signalsHandler(int sig)
 {
     assert(m_hub_that_installed_termination_handler->m_pHttpClient != nullptr);
 #ifdef DEBUG_SENTRYCPP
-    LOG("Returning to default handler");
+    LOG_SENTRY_DEBUG("Returning to default handler");
 #endif
     signal(sig, SIG_DFL); // default signal handler;
 
@@ -207,7 +207,7 @@ std::string Hub::captureException(const std::exception& exception, const json& c
 #ifdef DEBUG_SENTRYCPP
     std::stringstream ss;
     ss << "Capturing exception: " << currentAttributes["type"] << ", what: " << currentAttributes["value"] << '\n';
-    LOG(ss.str());
+    LOG_SENTRY_DEBUG(ss.str());
 #endif
 
     // TODO optional parameters:
@@ -243,7 +243,7 @@ std::string Hub::captureEvent(const json& event)
         if (checkIfEventTooOften(event, timestamp))
         {
     #ifdef DEBUG_SENTRYCPP
-        LOG("Dropping the event because happens too often.");
+        LOG_SENTRY_DEBUG("Dropping the event because happens too often.");
     #endif // DEBUG_SENTRYCPP
 
             return "";
@@ -260,7 +260,7 @@ std::string Hub::captureEvent(const json& event)
     const std::string contentsToSend = payload.dump();
 
 #ifdef DEBUG_SENTRYCPP
-    LOG(contentsToSend);
+    LOG_SENTRY_DEBUG(contentsToSend);
 #endif // DEBUG_SENTRYCPP
 
     // apply event sampling

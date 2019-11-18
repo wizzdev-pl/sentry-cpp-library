@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.1)
 project(SentryCpp)
 set(PROJECT_NAME SentryCpp)
 
-option(DEBUG_SENTRY "DEBUG_SENTRY" ON)
+option(DEBUG_SENTRY "DEBUG_SENTRY" OFF)
 #option(TEST_SENTRY "TEST_SENTRY_ENABLED" OFF)
 
 

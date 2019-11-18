@@ -3,7 +3,7 @@
 
 #include <string>
 
-#define LOG(msg, ...) Sentry::logSentryInternal(__PRETTY_FUNCTION__, msg)
+#define LOG_SENTRY_DEBUG(msg) Sentry::logSentryInternal(__PRETTY_FUNCTION__, msg)
 
 
 static constexpr char GET[] = "GET";
