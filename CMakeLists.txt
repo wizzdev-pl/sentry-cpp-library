@@ -6,7 +6,6 @@ set(PROJECT_NAME SentryCpp)
 option(DEBUG_SENTRY "DEBUG_SENTRY" OFF)
 #option(TEST_SENTRY "TEST_SENTRY_ENABLED" OFF)
 
-
 set(CMAKE_CXX_STANDARD 17)
 
 set(SOURCES
@@ -45,7 +44,8 @@ target_include_directories(${PROJECT_NAME}
                             ${CMAKE_CURRENT_SOURCE_DIR}/src
                             )
 
-target_link_libraries(${PROJECT_NAME} pthread uuid bfd)
+target_link_libraries(${PROJECT_NAME}
+        PUBLIC uuid pthread bfd)
 
 message("DEBUG_SENTRY = ${DEBUG_SENTRY}")
 if (${DEBUG_SENTRY})

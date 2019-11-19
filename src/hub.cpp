@@ -177,7 +177,7 @@ void Hub::signalsHandler(int sig)
 #ifdef DEBUG_SENTRYCPP
     std::stringstream ss;
     ss << "Received signal: " << sig_name << std::endl;
-    LOG(ss.str());
+    LOG_SENTRY_DEBUG(ss.str());
 #endif // DEBUG_SENTRYCPP
 
     json currentAttributes;
